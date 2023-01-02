@@ -7,9 +7,9 @@ EASTERN = pytz.timezone('America/New_York')
 
 DINING_HALLS = ["Mosher-Jordan", "South Quad", "Bursley", "East Quad", "North Quad", "South Quad", "Twigs at Oxford"]
 
-MAX_DAYS = 14
+MAX_DAYS = 15
 
-def fetch_until_found():
+def fetch_all_fish_instances():
     matches = {}
     
     for days_offset in range(0, MAX_DAYS):
@@ -32,14 +32,22 @@ def fetch_for_dining_hall_and_date(dining_hall: str, formatted_date: str):
     dining_hall_id = dining_hall.replace(' ', '-').lower()
     r = requests.get(f'https://dining.umich.edu/menus-locations/dining-halls/{dining_hall_id}/?menuDate={formatted_date}')
     
-    items = parse_items(r.text)
+    items = parse_items(r.text, formatted_date)
     
     matches = check_for_fish(items)
     return matches
 
-def parse_items(html: str) -> dict:
+def parse_items(html: str, formatted_date: str) -> dict:
     soup = BeautifulSoup(html, 'html.parser')
     courses = {}
+    
+    # if we're looking at a future menu, make sure the dates line up. if they don't, we've gone too far and are duplicating menus
+    if 'today' not in soup.find('h2', class_="menuTitle").get_text().lower():
+        menu_date = datetime.strptime(soup.find('span', class_='date').get_text(), '%A, %B %d, %Y').strftime('%Y-%m-%d')
+        
+        if menu_date != formatted_date:
+            print(f'Dates do not match up, skipping. Requested Date: {formatted_date}; Provided Date: {menu_date}')
+            return courses
     
     for meal in soup.find_all('div', class_='courses'):
         course = meal.find_previous_sibling('h3').get_text().strip()
@@ -53,8 +61,8 @@ def check_for_fish(courses):
     for course, items in courses.items():
         fish_matches = [item for item in items if 'fish' in item.lower()]
         for match in fish_matches:
-            matches.append((course, match))
+            matches.append({"course": course, "item": match})
             
     return matches
 
-fetch_until_found()
+fetch_all_fish_instances()
