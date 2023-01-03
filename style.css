@@ -12,3 +12,12 @@ main {
 h1, h2 {
     text-align: center;
 }
+
+a {
+    color: black;
+    text-align: center;
+}
+
+#last_updated {
+    text-align: center;
+}
