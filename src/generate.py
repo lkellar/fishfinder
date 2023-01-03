@@ -3,6 +3,9 @@ import dominate
 from dominate.tags import * 
 from datetime import datetime
 import pytz
+from os import path
+
+current_dir = path.dirname(path.realpath(__file__))
 
 def generate_page(fish_data):
     doc = dominate.document(title='Fish Finder - University of Michigan')
@@ -34,7 +37,7 @@ def generate_page(fish_data):
             with a(href="https://github.com/lkellar/fishfinder"):
                 p('github.com/lkellar/fishfinder')
                 
-    with open('out.html', 'w') as f:
+    with open(path.join(current_dir, '../out/index.html'), 'w') as f:
         f.write(doc.render())
 
 #EXAMPLE_FISH_DATA = [{'date': datetime(2023, 1, 4, 13, 41, 19, 149573), 'data': {'Twigs at Oxford': [{'course': 'Lunch', 'items': ['Whitefish w/ Mango Pineapple Salsa']}]}, 'days_until': 1}, {'date': datetime(2023, 1, 11, 13, 42, 39, 161323), 'data': {'South Quad': [{'course': 'Lunch', 'items': ['MSC Fish Sandwich on White Bun', 'Baked Rockfish']}, {'course': 'Dinner', 'items': ['Crispy Rockfish']}]}, 'days_until': 8}, {'date': datetime(2023, 1, 13, 13, 43, 4, 103163), 'data': {'South Quad': [{'course': 'Dinner', 'items': ['Smothered Catfish']}]}, 'days_until': 10}, {'date': datetime(2023, 1, 16, 13, 43, 44, 317924), 'data': {'South Quad': [{'course': 'Dinner', 'items': ['MSC Grilled Cod Fish Taco']}], 'Bursley': [{'course': 'Dinner', 'items': ['MSC Grilled Cod Fish Taco']}], 'Twigs at Oxford': [{'course': 'Dinner', 'items': ['MSC Grilled Cod Fish Taco']}]}, 'days_until': 13}]

@@ -236,3 +236,4 @@ gen
 *.sketch
 .nova
 out.html
+out/index.html
