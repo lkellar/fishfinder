@@ -235,3 +235,4 @@ gen
 *.wsgi
 *.sketch
 .nova
+out.html
