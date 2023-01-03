@@ -22,6 +22,9 @@ def generate_page(fish_data):
             h1("Fish Finder")
             p(f'Last Updated at {now}', id="last_updated")
             hr()
+            if not fish_data:
+                h2("No fish found!", id="notfound")
+                hr()
             for index, day in enumerate(fish_data):
                 with div(_class="day"):
                     h2(day['date'].strftime('%A, %B %d, %Y'))

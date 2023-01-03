@@ -13,6 +13,7 @@ requests = "*"
 bs4 = "*"
 pytz = "*"
 dominate = "*"
+lxml = "*"
 
 [dev-packages]
 

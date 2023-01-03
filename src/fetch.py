@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 
 EASTERN = pytz.timezone('America/New_York')
 
-DINING_HALLS = ["Mosher-Jordan", "South Quad", "Bursley", "East Quad", "North Quad", "South Quad", "Twigs at Oxford"]
+DINING_HALLS = ["Mosher-Jordan", "South Quad", "Bursley", "East Quad", "North Quad", "Markley", "Twigs at Oxford"]
 
 MAX_DAYS = 15
 
@@ -37,14 +37,14 @@ def fetch_for_dining_hall_and_date(dining_hall: str, formatted_date: str):
     except requests.exceptions.ConnectTimeout:
         # retry once
         r = requests.get(f'https://dining.umich.edu/menus-locations/dining-halls/{dining_hall_id}/?menuDate={formatted_date}')
-    
+
     items = parse_items(r.text, formatted_date)
     
     matches = check_for_fish(items)
     return matches
 
 def parse_items(html: str, formatted_date: str) -> dict:
-    soup = BeautifulSoup(html, 'html.parser')
+    soup = BeautifulSoup(html, 'lxml')
     courses = {}
     
     # if we're looking at a future menu, make sure the dates line up. if they don't, we've gone too far and are duplicating menus
