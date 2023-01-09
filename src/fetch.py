@@ -65,7 +65,7 @@ def parse_items(html: str, formatted_date: str) -> dict:
 def check_for_fish(courses):
     matches = []
     for course, items in courses.items():
-        fish_matches = [item for item in items if 'fish' in item.lower() or 'pollock' in item.lower() or 'cod' in item.lower()]
+        fish_matches = [item for item in items if 'fish' in item.lower() or 'pollock' in item.lower() or 'cod' in item.lower() or 'msc' in item.lower()]
         if fish_matches:
             matches.append({"course": course, "items": fish_matches})
             
