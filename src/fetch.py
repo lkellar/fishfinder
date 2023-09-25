@@ -2,12 +2,22 @@ import requests
 from datetime import datetime, timedelta
 import pytz
 from bs4 import BeautifulSoup
+from os.path import exists
 
 EASTERN = pytz.timezone('America/New_York')
 
 DINING_HALLS = ["Mosher-Jordan", "South Quad", "Bursley", "East Quad", "North Quad", "Markley", "Twigs at Oxford"]
 
 MAX_DAYS = 15
+
+CERT_PATH = '/etc/ssl/certs/ca-certificates.crt';
+CERTS_EXIST = exists(CERT_PATH);
+
+def get(url):
+    if CERTS_EXIST:
+        return requests.get(url, verify=CERT_PATH)
+    else:
+        return requests.get(url)
 
 def fetch_all_fish_instances():
     matches = []
@@ -33,10 +43,10 @@ def fetch_all_fish_instances():
 def fetch_for_dining_hall_and_date(dining_hall: str, formatted_date: str):
     dining_hall_id = dining_hall.replace(' ', '-').lower()
     try:
-        r = requests.get(f'https://dining.umich.edu/menus-locations/dining-halls/{dining_hall_id}/?menuDate={formatted_date}')
+        r = get(f'https://dining.umich.edu/menus-locations/dining-halls/{dining_hall_id}/?menuDate={formatted_date}')
     except requests.exceptions.ConnectTimeout:
         # retry once
-        r = requests.get(f'https://dining.umich.edu/menus-locations/dining-halls/{dining_hall_id}/?menuDate={formatted_date}')
+        r = get(f'https://dining.umich.edu/menus-locations/dining-halls/{dining_hall_id}/?menuDate={formatted_date}')
 
     items = parse_items(r.text, formatted_date)
     
