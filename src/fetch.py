@@ -67,7 +67,7 @@ def parse_items(html: str, formatted_date: str) -> dict:
     
     for meal in soup.find_all('div', class_='courses'):
         course = meal.find_previous_sibling('h3').get_text().strip()
-        items = [div.get_text().strip() for div in meal.find_all('div', class_='item-name')]
+        items = [div.get_text().strip() for div in meal.find_all('span', class_='item-name')]
         courses[course] = items
     
     return courses
